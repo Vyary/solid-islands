@@ -1,4 +1,4 @@
-import { createResource, For } from "solid-js";
+import { createResource, For, onMount } from "solid-js";
 
 interface Data {
   name: string;
@@ -16,8 +16,12 @@ const fetchData = async () => {
 };
 
 export default function Page() {
-  const [data] = createResource(fetchData, {
+  const [data, { refetch }] = createResource(fetchData, {
     deferStream: true,
+  });
+
+  onMount(() => {
+    refetch();
   });
 
   return (
