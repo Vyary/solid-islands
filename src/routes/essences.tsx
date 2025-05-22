@@ -1,4 +1,4 @@
-import { createResource, For, onMount } from "solid-js";
+import { createResource, For } from "solid-js";
 
 interface Data {
   name: string;
@@ -15,17 +15,9 @@ const fetchData = async () => {
   return (await response.json()) as Data[];
 };
 
-export const route = {
-  preload: () => fetchData(),
-};
-
 export default function Page() {
-  const [data, { refetch }] = createResource(fetchData, {
+  const [data] = createResource(fetchData, {
     deferStream: true,
-  });
-
-  onMount(() => {
-    refetch();
   });
 
   return (
