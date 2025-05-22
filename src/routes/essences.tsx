@@ -1,3 +1,4 @@
+import { useIsRouting } from "@solidjs/router";
 import { createResource, For, onMount } from "solid-js";
 
 interface Data {
@@ -21,7 +22,11 @@ export default function Page() {
   });
 
   onMount(() => {
-    refetch();
+    const isRouting = useIsRouting();
+
+    if (!isRouting()) {
+      refetch();
+    }
   });
 
   return (
