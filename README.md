@@ -2,8 +2,6 @@
 
 To get static site generation with dynamic islands (like Astro), there are **two key parts**:
 
----
-
 ### 1. Enable SSG with link crawling
 
 Set this in your SolidStart config to allow static generation of all reachable routes:
