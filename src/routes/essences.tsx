@@ -1,5 +1,5 @@
-import { useIsRouting } from "@solidjs/router";
-import { createResource, For, onMount } from "solid-js";
+import { createAsync, query, revalidate, useIsRouting } from "@solidjs/router";
+import { For, onMount, Suspense } from "solid-js";
 
 interface Data {
   name: string;
@@ -9,36 +9,42 @@ interface Data {
   };
 }
 
-const fetchData = async () => {
+const fetchData = query(async () => {
+  await new Promise((res) => setTimeout(res, 2000));
+
   const response = await fetch(
     "https://eu.exile-profit.com/v2/Dawn%20of%20the%20Hunt/essences2",
   );
   return (await response.json()) as Data[];
+}, "essences");
+
+export const route = {
+  preload: () => fetchData(),
 };
 
 export default function Page() {
-  const [data, { refetch }] = createResource(fetchData, {
-    deferStream: true,
-  });
+  const data = createAsync(() => fetchData(), { deferStream: true });
 
   onMount(() => {
     const isRouting = useIsRouting();
 
     if (!isRouting()) {
-      refetch();
+      revalidate("essences");
     }
   });
 
   return (
     <>
       <h1>Essences</h1>
-      <For each={data()}>
-        {(r) => (
-          <div>
-            {r.name} - {r.price.value} {r.price.type}
-          </div>
-        )}
-      </For>
+      <Suspense>
+        <For each={data()}>
+          {(r) => (
+            <div>
+              {r.name} - {r.price.value} {r.price.type}
+            </div>
+          )}
+        </For>
+      </Suspense>
     </>
   );
 }

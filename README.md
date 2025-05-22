@@ -16,21 +16,18 @@ export default {
 };
 ```
 
-### 2. Partial Hydration with `createResource` and `deferStream`
+### 2. Partial Hydration with `createAsync` and `deferStream`
 
-The most crucial part is using `deferStream: true` inside `createResource`. This ensures data is fetched **at build time** and included in the prerendered HTML, but allows client-side updates via `refetch()` later.
-`useIsRouting` is used to avoid unnecessary refetches.
+The most crucial part is using `deferStream: true` inside `createAsync`. This ensures data is fetched **at build time** and included in the prerendered HTML, but allows client-side updates via `revalidate()` later.
 
 ```ts
-const [data, { refetch }] = createResource(fetchData, {
-  deferStream: true,
-});
+const data = createAsync(() => fetchData(), { deferStream: true });
 
 onMount(() => {
   const isRouting = useIsRouting();
 
   if (!isRouting()) {
-    refetch();
+    revalidate("essences");
   }
 });
 ```
