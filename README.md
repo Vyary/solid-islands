@@ -19,6 +19,7 @@ export default {
 ### 2. Partial Hydration with `createResource` and `deferStream`
 
 The most crucial part is using `deferStream: true` inside `createResource`. This ensures data is fetched **at build time** and included in the prerendered HTML, but allows client-side updates via `refetch()` later.
+`useIsRouting` is used to avoid unnecessary refetches.
 
 ```ts
 const [data, { refetch }] = createResource(fetchData, {
@@ -26,7 +27,11 @@ const [data, { refetch }] = createResource(fetchData, {
 });
 
 onMount(() => {
-  refetch();
+  const isRouting = useIsRouting();
+
+  if (!isRouting()) {
+    refetch();
+  }
 });
 ```
 
