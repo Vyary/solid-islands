@@ -13,7 +13,7 @@ const fetchData = query(async () => {
   await new Promise((res) => setTimeout(res, 2000));
 
   const response = await fetch(
-    "https://eu.exile-profit.com/v2/Dawn%20of%20the%20Hunt/essences2",
+    "https://eu.exile-profit.com/v2/Rise%20of%20the%20Abyssal/essences2",
   );
   return (await response.json()) as Data[];
 }, "essences");
